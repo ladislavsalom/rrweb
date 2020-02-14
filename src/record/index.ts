@@ -1,5 +1,5 @@
 import { snapshot } from 'rrweb-snapshot';
-import initObservers from './observer';
+import initObservers, { observeStylesheet } from './observer';
 import {
   mirror,
   on,
@@ -197,6 +197,17 @@ function record(options: recordOptions = {}): listenerHandler | undefined {
           hooks,
         ),
       );
+
+      for (var i in mirror.map) {
+        const node = mirror.map[i];
+        try {
+          if ((node as any).tagName == 'STYLE') {
+            observeStylesheet(node as any);
+          }
+        } catch (e) {
+
+        }
+      }
     };
     if (
       document.readyState === 'interactive' ||
